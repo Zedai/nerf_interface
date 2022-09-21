@@ -137,7 +137,7 @@ while True:
 	        print('completed')
 
 	        c.send(dumps(final_img.reshape(120,160,3).detach().cpu().numpy()))
-                c.send(b'done')
+	        c.send(b'done')
 #ray_d = train_data.scene.ray_dir[38400:57600]
 
 #ray_o = train_data.scene.ray_origin[38400:57600]
