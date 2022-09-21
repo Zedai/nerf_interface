@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '/home/yash/nerf_simulation/')
+
 import matplotlib.pyplot as plt
 import time
 import torch
@@ -36,7 +39,7 @@ with open("MLP_density.json") as d:
 with open("MLP_color.json") as c:
 	    config_color = json.load(c)
 
-config_yml = OmegaConf.load("/home/sai/arpl/nerf_simulation/default_config.yml")
+config_yml = OmegaConf.load("/home/yash/nerf_simulation/default_config.yml")
 
 nerf = NeRF_pipeline(config_yml, config_density, config_color)
 sampling  = NeRF_sampling(1, 10,n_samples)
