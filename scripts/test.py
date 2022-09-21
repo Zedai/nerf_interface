@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0, '/home/yash/nerf_simulation/')
+directory = '/home/yash/Documents/nerf_simulation/'
+sys.path.insert(0, directory)
 
 import matplotlib.pyplot as plt
 import time
@@ -33,18 +34,18 @@ s.listen(5)
 print('LISTENING')
 
 
-with open("MLP_density.json") as d:
+with open(directory+"MLP_density.json") as d:
 	    config_density = json.load(d)
 
-with open("MLP_color.json") as c:
+with open(directory+"MLP_color.json") as c:
 	    config_color = json.load(c)
 
-config_yml = OmegaConf.load("/home/yash/nerf_simulation/default_config.yml")
+config_yml = OmegaConf.load(directory+"default_config.yml")
 
 nerf = NeRF_pipeline(config_yml, config_density, config_color)
 sampling  = NeRF_sampling(1, 10,n_samples)
 model = NeRF_Network(config_density, config_color)
-model.load_state_dict(torch.load('weights_3.pth'))
+model.load_state_dict(torch.load(directory+'weights_3.pth'))
 model.eval()
 fov = 1.7
 focal_length = 0.5*config_yml.image_w/np.tan(0.5*fov)
