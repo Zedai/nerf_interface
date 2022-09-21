@@ -59,7 +59,8 @@ if __name__ == '__main__':
         s = socket.socket()
         while True:
             try:
-                s.connect(('127.0.0.1', 12348))
+                s.connect(('128.238.39.126', 12348))
+#                s.connect(('127.0.0.1', 12348))
                 break
             except ConnectionRefusedError:
                 print('NerF Simulator not Running')
