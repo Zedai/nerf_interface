@@ -53,12 +53,26 @@ def callback(data):
     r20 = 2*(y*w - x*z)
     r21 = 2*(z*w + x*y)
     r22 = 2*(x**2 + w**2)-1
-    mat = [[r00, r10, r20, data.pose.position.x],
+
+#original
+    mat1 = [[r00, r01, r02, data.pose.position.x],
+           [r10, r11, r12, data.pose.position.y],
+           [r20, r21, r22, data.pose.position.z],
+           [0, 0, 0, 1]]
+
+    mat2 = [[r00, r01, r02, r00 * data.pose.position.x + r01 * data.pose.position.y + r02 * data.pose.position.z],
+           [r10, r11, r12, r10 * data.pose.position.x + r11 * data.pose.position.y + r12 * data.pose.position.z],
+           [r20, r21, r22, r20 * data.pose.position.x + r21 * data.pose.position.y + r22 * data.pose.position.z],
+           [0, 0, 0, 1]]
+
+
+#fix
+    mat3 = [[r00, r10, r20, data.pose.position.x],
            [r01, r11, r21, data.pose.position.y],
            [r02, r12, r22, data.pose.position.z],
            [0, 0, 0, 1]]
 
-    updatedData = mat
+    updatedData = mat3
 #    while not rospy.is_shutdown():
 #        break
 
