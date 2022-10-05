@@ -33,7 +33,6 @@ Directly call the `.launch`  file using `roslaunch` command:
 $ source ~/path/to/your/workspace/devel/setup.bash
 $ roslaunch nerf_interface nerf_sim.launch
 $ python ~/path/to/your/workspace/src/nerf_interface/scripts/test.py
-$ rosrun rqt_mav_manager rqt_mav_manager
 ```
 ### Start simulation
 Now you should have everything set up and properly linked together. Now you can control the drone using rqt_mav_manager and the rendered view should be streamed to your rviz display. Consult [arpl_quadrotor_control](https://github.com/arplaboratory/arpl_quadrotor_control) for more information on how to use rqt_mav_manager and the ARL Simulator.
