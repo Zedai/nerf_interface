@@ -10,36 +10,18 @@ import numpy as np
 import time
 from cv_bridge import CvBridge
 
-global s, updatedData
+global s
 
 def listener():
     rospy.init_node('interface_nerf', anonymous=True)
     rospy.Subscriber("/quadrotor/pose", PoseStamped, callback)
-    bridge = CvBridge()
-    pub = rospy.Publisher('renderedView', Image, queue_size=10)
-    r = rospy.Rate(10) # 10hz 
-    while not rospy.is_shutdown():
-        try:
-            s.send(dumps(updatedData))
-            fragments = []
-            while True:
-                packet = s.recv(1000)
-                if packet[-4:] == b'done':
-                    fragments.append(packet[:-4])
-                    break
-                if not packet: break
-                fragments.append(packet)
-            final = loads(b"".join(fragments))
-            final = final*255
-            final = final.astype(np.uint8)
-            pub.publish(bridge.cv2_to_imgmsg(final, encoding="rgb8"))
-        except:
-            pass
-        r.sleep()  
-#    rospy.spin()
+
+    rospy.spin()
 
 def callback(data):
-    global updatedData
+    bridge = CvBridge()
+    pub = rospy.Publisher('renderedView', Image, queue_size=10)
+
     x = data.pose.orientation.x
     y = data.pose.orientation.y
     z = data.pose.orientation.z
@@ -53,14 +35,28 @@ def callback(data):
     r20 = 2*(y*w - x*z)
     r21 = 2*(z*w + x*y)
     r22 = 2*(x**2 + w**2)-1
-    mat = [[r00, r10, r20, data.pose.position.x],
-           [r01, r11, r21, data.pose.position.y],
-           [r02, r12, r22, data.pose.position.z],
+    mat = [[r00, r01, r02, data.pose.position.x],
+           [r10, r11, r12, data.pose.position.y],
+           [r20, r21, r22, data.pose.position.z],
            [0, 0, 0, 1]]
 
-    updatedData = mat
-#    while not rospy.is_shutdown():
-#        break
+    while not rospy.is_shutdown():
+        s.send(dumps(mat))
+
+        fragments = []
+        while True:
+            packet = s.recv(1000)
+            if packet[-4:] == b'done':
+                fragments.append(packet[:-4])
+                break
+            if not packet: break
+            fragments.append(packet)
+
+        final = loads(b"".join(fragments))
+        final = final*255
+        final = final.astype(np.uint8)
+        pub.publish(bridge.cv2_to_imgmsg(final, encoding="rgb8"))
+        break
 
 if __name__ == '__main__':
     try:
@@ -72,6 +68,7 @@ if __name__ == '__main__':
                 break
             except ConnectionRefusedError:
                 print('NerF Simulator not Running')
+                
         listener()
     except rospy.ROSInterruptException:
         s.close()

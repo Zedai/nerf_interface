@@ -1,5 +1,5 @@
 import sys
-directory = '/home/yash/Documents/nerf_simulation/'
+directory = '/home/sai/arpl/nerf_simulation/'
 sys.path.insert(0, directory)
 
 import matplotlib.pyplot as plt
